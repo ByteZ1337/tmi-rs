@@ -57,9 +57,7 @@ impl TlsConfig {
     trace!("loading native certificates");
     let mut root_store = RootCertStore::empty();
     let native_certs = rustls_native_certs::load_native_certs()?;
-    for cert in native_certs {
-      root_store.add(&rustls::Certificate(cert.0))?;
-    }
+    root_store.add_parsable_certificates(&native_certs);
     let config = rustls::ClientConfig::builder()
       .with_safe_defaults()
       .with_root_certificates(root_store)
